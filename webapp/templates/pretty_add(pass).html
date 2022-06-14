@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">新建靓号</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post">
+                    {% csrf_token %}
+
+
+                    <div class="form-group">
+                        <label>号码</label>
+                        <input type="text" class="form-control" placeholder="号码" name="mobile">
+                    </div>
+
+                    <div class="form-group">
+                        <label>价格</label>
+                        <input type="number" class="form-control" placeholder="价格" name="price">
+                    </div>
+
+                    <div class="form-group">
+                        <label>等级</label>
+                        <select class="form-control" name="level">
+                            {% for item in level_choices %}
+                            <option value="{{ item.0 }}">{{ item.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>状态</label>
+                        <select class="form-control" name="status">
+                            {% for item in status_choices %}
+                            <option value="{{ item.0 }}">{{ item.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

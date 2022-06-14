@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container">
+
+        <div style="margin-bottom: 10px" class="clearfix">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+            >新建员工工资
+            </button>
+
+            <div style="float:right; width:300px;">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search for..."
+                               value="{{ search_data }}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                      </span>
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+
+        </div>
+
+
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                工资列表
+            </div>
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>工号</th>
+                    <th>基本工资</th>
+                    <th>福利补贴</th>
+                    <th>奖励工资</th>
+                    <th>失业保险</th>
+                    <th>住房公积金</th>
+                    <th>实发工资</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in queryset %}
+                    <tr>
+                        <th>{{ obj.acc }}</th>
+                        <td>{{ obj.basic_salary }}</td>
+                        <td>{{ obj.welfare_allowance }}</td>
+                        <td>{{ obj.bonus_salary }}</td>
+                        <td>{{ obj.unemployment_insurance }}</td>
+                        <td>{{ obj.housing_fund }}</td>
+                        <td>{{ obj.salary_sum }}</td>
+                        <td>
+                            <a class="btn-primary btn-xs" href="/salary/{{ obj.id }}/edit/">编辑</a>
+                          <!--  <a class="btn-danger btn-xs" data-toggle="modal" data-target="#confirmModal">删除</a>  -->
+                          <a class="btn-danger btn-xs" href="/salary/{{ obj.id }}/delete/">删除</a>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+
+        <!-- 添加模态对话框-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">新建员工工资</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formAdd">
+                            <div class="clearfix">
+                                {% for field in form %}
+                                    {#                                    <div class="col-xs-6">#}
+                                    <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                        <label>{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                    </div>
+                                    {#                                    </div>#}
+                                {% endfor %}
+                                <div class="col-xs-12">
+                                    <button id="btnAdd" type="button" class="btn btn-primary" aria-label="Close">提 交</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- 删除模态对话框-->
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">确认删除</h4>
+                    </div>
+                    <div class="modal-body">
+                        是否确认删除该条记录？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="deleteBtn" type="button" class="btn btn-primary">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!--修改模态对话框-->
+
+
+    </div>
+{% endblock %}
+{% block js %}
+
+    <script type="text/javascript">
+        $(function () {
+            BtnAddEvent();
+            {#BtnDeleteEvent();#}
+        })
+
+        function BtnAddEvent() {
+            $("#btnAdd").click(function () {
+                $(".error-msg").empty();
+                $.ajax({
+                    url: '/salary/add/',
+                    type: "post",
+                    data: $("#formAdd").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                            window.location.replace('/salary/list/')
+                        } else {
+                            $.each(res.error, function (name, data) {
+                                // console.log(name,data);
+                                $("#id_" + name).next().text(data[0]);
+                            })
+                        }
+                    }
+                })
+            })
+        }
+/*        function BtnDeleteEvent() {
+            $("#btnAdd").click(function () {
+                $(".error-msg").empty();
+                $.ajax({
+                    url: '/salary/add/',
+                    type: "post",
+                    data: $("#formAdd").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                        } else {
+                            $.each(res.error, function (name, data) {
+                                // console.log(name,data);
+                                $("#id_" + name).next().text(data[0]);
+                            })
+                        }
+                    }
+                })
+            })
+        }
+*/
+
+
+    </script>
+{% endblock %}
+

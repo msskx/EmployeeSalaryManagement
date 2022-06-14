@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="clearfix">
+
+            <div class="row" style="padding: 20px">
+                <div class="col-md-7">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-object-align-bottom" aria-hidden="true"></span>
+                            部门工资图表
+                        </div>
+                        <div
+                                style="height:500px;" id="salaryChart">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-object-align-bottom" aria-hidden="true"></span>
+                            部门工资比例
+                        </div>
+                        <div
+                                style="height:500px; padding: 40px;" id="salaryPie">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+
+        var chartDom = document.getElementById('salaryChart');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+            xAxis: {
+                type: 'category',
+                data: [{% for item in depart_name %}
+                    '{{ item }}',
+                {% endfor %}]
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    data: [{% for item in depart_salary %}
+                        '{{ item }}',
+                    {% endfor %}],
+                    type: 'bar'
+                }
+            ]
+        };
+
+        option && myChart.setOption(option);
+
+    </script>
+
+    <script>
+
+        var chartDom = document.getElementById('salaryPie');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+            title: {
+                text: '',
+                subtext: '',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [
+                {
+                    name: '工资份额',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        {#{value: 1048, name: 'Search Engine'},#}
+                        {#{value: 735, name: 'Direct'},#}
+                        {#{value: 580, name: 'Email'},#}
+                        {#{value: 484, name: 'Union Ads'},#}
+                        {#{value: 300, name: 'Video Ads'}#}
+                        {% for item in pie %}
+                            {value:{{ item.value }}, name:'{{item.name}}'},
+                        {% endfor %}
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        option && myChart.setOption(option);
+
+    </script>
+{% endblock %}
