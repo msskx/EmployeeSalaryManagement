@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container">
         <div class="panel panel-default">
-            <div class="panel-heading">表单</div>
+            <div class="panel-heading">任务表单</div>
             <div class="panel-body">
 
                 <form id="formAdd">
@@ -23,30 +23,61 @@
                         </div>
                     </div>
                 </form>
-
-
             </div>
         </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                任务列表
+            </div>
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>等级</th>
+                    <th>细节</th>
+                    <th>负责人</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in queryset %}
+                    <tr>
+                        <th>{{ obj.title }}</th>
+                        <td>{{ obj.level }}</td>
+                        <td>{{ obj.detail }}</td>
+                        <td>{{ obj.user }}</td>
+                        <td>
+                            <a class="btn-danger btn-xs" href="/task/{{ obj.id }}/delete/">解决</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
+        </div>
 
-{#        <hr/>#}
-{#        <h1>Ajax学习</h1>#}
-{#        <h3>示例1</h3>#}
-{#        <input id="btn1" type="button" class="btn btn-primary" value="点击1"/>#}
-{##}
-{#        <h3>示例2</h3>#}
-{#        <input type="text" id="txtUser" placeholder="姓名"/>#}
-{#        <input type="text" id="txtAge" placeholder="年龄"/>#}
-{#        <input id="btn2" type="button" class="btn btn-primary" value="点击2"/>#}
-{##}
-{#        <h3>示例3</h3>#}
-{#        <form id="form3">#}
-{#            <input type="text" name="user" placeholder="姓名"/>#}
-{#            <input type="text" name="age" placeholder="年龄"/>#}
-{#            <input type="text" name="email" placeholder="邮箱"/>#}
-{#            <input type="text" name="more" placeholder="介绍"/>#}
-{#        </form>#}
-{#        <input id="btn3" type="button" class="btn btn-primary" value="点击3"/>#}
+        {#        <hr/>#}
+        {#        <h1>Ajax学习</h1>#}
+        {#        <h3>示例1</h3>#}
+        {#        <input id="btn1" type="button" class="btn btn-primary" value="点击1"/>#}
+        {##}
+        {#        <h3>示例2</h3>#}
+        {#        <input type="text" id="txtUser" placeholder="姓名"/>#}
+        {#        <input type="text" id="txtAge" placeholder="年龄"/>#}
+        {#        <input id="btn2" type="button" class="btn btn-primary" value="点击2"/>#}
+        {##}
+        {#        <h3>示例3</h3>#}
+        {#        <form id="form3">#}
+        {#            <input type="text" name="user" placeholder="姓名"/>#}
+        {#            <input type="text" name="age" placeholder="年龄"/>#}
+        {#            <input type="text" name="email" placeholder="邮箱"/>#}
+        {#            <input type="text" name="more" placeholder="介绍"/>#}
+        {#        </form>#}
+        {#        <input id="btn3" type="button" class="btn btn-primary" value="点击3"/>#}
+
 
     </div>
 {% endblock %}
@@ -130,6 +161,7 @@
                     success: function (res) {
                         if (res.status) {
                             alert("添加成功");
+                            window.location.replace('/task/list/')
                         } else {
                             $.each(res.error, function (name, data) {
                                 // console.log(name,data);

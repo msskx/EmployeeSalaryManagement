@@ -27,7 +27,7 @@ def salary_list(request):
     data_dict = {}
     value = request.GET.get('q')
     if value:
-        data_dict["mobile__contains"] = value
+        data_dict["acc_id"] = value
 
     queryset = models.Salary.objects.filter(**data_dict).order_by("salary_sum")
     search_data = value

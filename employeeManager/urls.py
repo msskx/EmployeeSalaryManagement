@@ -58,6 +58,7 @@ urlpatterns = [
     path('task/list/', task.task_list),
     path('task/ajax/', task.task_ajax),
     path('task/add/', task.task_add),
+    path('task/<int:nid>/delete/', task.task_delete),
     # 工资管理
 
     path('salary/list/', salary.salary_list),

@@ -13,7 +13,7 @@ def user_list(request):
     data_dict = {}
     value = request.GET.get('q')
     if value:
-        data_dict["mobile__contains"] = value
+        data_dict["account__contains"] = value
     queryset = models.UserInfo.objects.filter(**data_dict)
     search_data = value
     page_object = Pagination(request, queryset)
